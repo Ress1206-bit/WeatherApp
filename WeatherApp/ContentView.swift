@@ -9,13 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        let colors: [Color] = [.red, .blue]
+        TabView {
+            ForEach(colors, id: \.self) { color in
+                VStack {
+                    color
+                }
+            }
         }
-        .padding()
+        .tabViewStyle(.page)
+        .onAppear() {
+            dataService.callAPI(dataService)
+        }
+        
     }
 }
 
