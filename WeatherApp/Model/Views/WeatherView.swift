@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct PlaceWeatherView: View {
+struct WeatherView: View, Hashable {
     
-    var name:String = "Sandy Springs"
-    var temperature: Int = 82
-    var weatherDescription: String = "Sunny"
+    var name:String?
+    var temperature: Int?
+    var weatherDescription: String?
+    var maxTemp: Int?
+    var minTemp: Int?
     
     var body: some View {
         
@@ -20,20 +22,20 @@ struct PlaceWeatherView: View {
                 .foregroundStyle(.blue)
                 .ignoresSafeArea()
             VStack {
-                Text(name)
+                Text(name ?? "- -")
                     .font(.largeTitle)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                     .padding(.top, 50)
-                Text("\(temperature)°")
+                Text("\(temperature ?? 999)°")
                     .font(.system(size: 100))
                     .fontWeight(.thin)
                     .foregroundStyle(.white)
                     .padding(.leading, 20)
-                Text("\(weatherDescription)")
+                Text("\(weatherDescription ?? "- -")")
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
-                Text("H:82° L:58°")
+                Text("H:\(maxTemp ?? 999)° L:\(minTemp ?? -999)°")
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                 ZStack{
@@ -62,7 +64,7 @@ struct PlaceWeatherView: View {
                                             .foregroundStyle(.yellow)
                                             .padding(.top, 4)
                                             .font(.system(size: 20))
-                                        Text("\(temperature)°")
+                                        Text("\(temperature ?? 0)°")
                                             .padding(.top, 4)
                                             .foregroundStyle(.white)
                                     }
@@ -86,5 +88,5 @@ struct PlaceWeatherView: View {
 }
 
 #Preview {
-    PlaceWeatherView()
+    WeatherView()
 }

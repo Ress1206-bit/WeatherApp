@@ -8,7 +8,8 @@
 import Foundation
 
 
-struct CurrentData: Decodable{
+struct CurrentData: Decodable, Identifiable {
+    var id: UUID = UUID()
     var location: Location
     var current: Current
     var forecast: Forecast
