@@ -10,24 +10,44 @@ import SwiftUI
 struct LaunchView: View {
     
     @Environment(WeatherModel.self) var weatherModel
+    
+    var cityNames = ["Atlanta", "London", "Capetown", "Madrid"]
+    @State var weatherViews: [WeatherView] = []
 
     var body: some View {
         
         TabView {
-            
-            
-            let allData: [CurrentData] = []
-            
-            ForEach(allData) { _ in
+
+            ForEach(Array(cityNames.enumerated()), id: \.1) { index, name in
                 VStack {
-                    Text("hello")
+                    if weatherViews.count == cityNames.count {
+                        weatherViews[index]
+                    }
+                    else {
+                        VStack{
+                            Spacer()
+                            Text(name)
+                                .font(.largeTitle)
+                                .padding()
+                            LoadingView()
+                                .padding()
+                            Spacer()
+                        }
+                    }
                 }
             }
         }
         .tabViewStyle(.page)
         .onAppear() {
-                weatherModel.loadWeatherData()
+            for name in cityNames {
+                Task {
+                    if let model = await weatherModel.apiCall(cityName: name) {
+                        weatherViews.append(weatherModel.getWeatherView(currentData: model))
+                    }
+                }
+            }
         }
+        .ignoresSafeArea()
         
     }
 }

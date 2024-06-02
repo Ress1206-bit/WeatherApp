@@ -8,8 +8,7 @@
 import Foundation
 
 
-struct CurrentData: Decodable, Identifiable {
-    var id: UUID = UUID()
+struct CurrentData: Decodable {
     var location: Location
     var current: Current
     var forecast: Forecast
@@ -65,12 +64,12 @@ struct Forecast: Decodable {
 struct ForecastDay: Decodable {
     var date: String?
     var date_epoch: Int?
-    var day: DayW?
+    var day: Day?
     var astro: Astro?
-    var hour: [HourW]?
+    var hour: [Hour]?
 }
 
-struct DayW: Decodable {
+struct Day: Decodable {
     var maxtemp_c: Double?
     var maxtemp_f: Double?
     var mintemp_c: Double?
@@ -104,7 +103,7 @@ struct Astro: Decodable {
     var is_sun_up: Int?
 }
 
-struct HourW: Decodable {
+struct Hour: Decodable {
     var time_epoch: Int?
     var time: String?
     var temp_c: Double?

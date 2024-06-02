@@ -10,17 +10,9 @@ import Foundation
 @Observable
 class WeatherModel {
     
-    var cityNames: [String] = ["Atlanta", "London"]
+    var cityNames: [String] = ["London", "Atlanta"]
     
-    var currentData: [CurrentData] = []
-    
-    func addWeatherData(cityName: String) {
-        Task {
-            await currentData.append(apiCall(cityName: cityName))
-        }
-    }
-    
-    func apiCall(cityName: String) async -> CurrentData {
+    func apiCall(cityName: String) async -> CurrentData? {
         let apiKey = "660bf5506b9c4285b82181711243105"
         
         //make url
@@ -48,35 +40,37 @@ class WeatherModel {
                 print(error)
             }
         }
-        return currentData[0]
+        return nil
     }
     
-    func getWeatherView(index: Int) -> WeatherView {
- 
+    func getWeatherView(currentData: CurrentData) -> WeatherView {
+        let name:String? = currentData.location.name
+        let temperature: Int? = Int(currentData.current.temp_f ?? 0)
+        let weatherDescription: String? = currentData.current.condition?.text
+        let maxTemp: Int? = Int(currentData.forecast.forecastday[0].day?.maxtemp_f ?? 0)
+        let minTemp: Int? = Int(currentData.forecast.forecastday[0].day?.mintemp_f ?? 0)
         
-        let name:String? = cityNames[index]
-        let temperature: Double? = currentData[index].current.temp_f
-        let weatherDescription: String? = currentData[index].current.condition?.text
-        let maxTemp: Double? = currentData[index].forecast.forecastday[0].day?.maxtemp_f
-        let minTemp: Double? = currentData[index].forecast.forecastday[0].day?.mintemp_f
-        
-        
-        
-        let weatherView = WeatherView(name: name,
-                                      temperature: Int(temperature ?? 0),
-                                      weatherDescription: weatherDescription,
-                                      maxTemp: Int(maxTemp ?? 0),
-                                      minTemp: Int(minTemp ?? 0))
-        
-        return weatherView
-        
+        return WeatherView(name: name,
+                           temperature: temperature,
+                           weatherDescription: weatherDescription,
+                           maxTemp: maxTemp,
+                           minTemp: minTemp)
     }
-    
-    func loadWeatherData() {
-        for cityName in cityNames {
-            addWeatherData(cityName: cityName)
-        }
-    }
+//    
+//    func loadWeatherViews() -> [WeatherView] {
+//        
+//        var weatherViews: [WeatherView] = []
+//        
+//        for name in cityNames {
+//            Task {
+//                if let model = await apiCall(cityName: name) {
+//                    weatherViews.append(getWeatherView(currentData: model))
+//                }
+//            }
+//        }
+//        
+//        return weatherViews
+//    }
 }
 
 
