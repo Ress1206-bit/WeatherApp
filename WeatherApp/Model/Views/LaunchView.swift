@@ -10,8 +10,7 @@ import SwiftUI
 struct LaunchView: View {
     
     @Environment(WeatherModel.self) var weatherModel
-    
-    var cityNames = ["Atlanta", "London", "Cape Town", "Madrid"]
+
     @State var weatherViews: [WeatherView] = []
 
     var body: some View {
@@ -22,9 +21,9 @@ struct LaunchView: View {
                 LocationWeatherView()
             }
 
-            ForEach(Array(cityNames.enumerated()), id: \.1) { index, name in
+            ForEach(Array(weatherModel.cityNames.enumerated()), id: \.1) { index, name in
                 VStack {
-                    if weatherViews.count == cityNames.count {
+                    if weatherViews.count == weatherModel.cityNames.count {
                         weatherViews[index]
                     }
                     else {
@@ -43,12 +42,16 @@ struct LaunchView: View {
         }
         .tabViewStyle(.page)
         .onAppear() {
-            for name in cityNames {
-                Task {
+            Task {
+                var tempWeatherViews: [Int: WeatherView] = [:] // Temporary dictionary
+                
+                for (index, name) in weatherModel.cityNames.enumerated() {
                     if let model = await weatherModel.apiCall(cityName: name) {
-                        weatherViews.append(weatherModel.getWeatherView(currentData: model))
+                        let weatherView = weatherModel.getWeatherView(currentData: model)
+                        tempWeatherViews[index] = weatherView
                     }
                 }
+                weatherViews = weatherModel.cityNames.indices.map { tempWeatherViews[$0]! }
             }
             
             weatherModel.getUserLocation()
