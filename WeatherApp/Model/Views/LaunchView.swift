@@ -11,7 +11,7 @@ struct LaunchView: View {
     
     @Environment(WeatherModel.self) var weatherModel
     
-    var cityNames = ["Atlanta", "London", "Capetown", "Madrid"]
+    var cityNames = ["Atlanta", "London", "Cape Town", "Madrid"]
     @State var weatherViews: [WeatherView] = []
 
     var body: some View {

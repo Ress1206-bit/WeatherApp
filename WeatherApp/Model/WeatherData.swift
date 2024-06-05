@@ -104,6 +104,7 @@ struct Astro: Decodable {
 }
 
 struct Hour: Decodable {
+//    var id = UUID()
     var time_epoch: Int?
     var time: String?
     var temp_c: Double?
