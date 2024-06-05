@@ -6,11 +6,24 @@
 //
 
 import Foundation
+import CoreLocation
 
 @Observable
-class WeatherModel {
-    
+class WeatherModel: NSObject, CLLocationManagerDelegate {
+
     var cityNames: [String] = ["London", "Atlanta"]
+
+    var currentUserLocation: CLLocationCoordinate2D?
+    var locationManager = CLLocationManager()
+
+    var coordinateString: String?
+
+
+    override init() {
+        super.init()
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.delegate = self
+    }
     
     func apiCall(cityName: String) async -> CurrentData? {
         let apiKey = "660bf5506b9c4285b82181711243105"
@@ -56,21 +69,48 @@ class WeatherModel {
                            maxTemp: maxTemp,
                            minTemp: minTemp)
     }
-//    
-//    func loadWeatherViews() -> [WeatherView] {
-//        
-//        var weatherViews: [WeatherView] = []
-//        
-//        for name in cityNames {
-//            Task {
-//                if let model = await apiCall(cityName: name) {
-//                    weatherViews.append(getWeatherView(currentData: model))
-//                }
-//            }
-//        }
-//        
-//        return weatherViews
-//    }
+    
+    func getUserLocation() {
+
+            // Checks that we have permission
+            if locationManager.authorizationStatus == .authorizedWhenInUse {
+                currentUserLocation = nil
+                locationManager.requestLocation()
+            }
+            else {
+                locationManager.requestWhenInUseAuthorization()
+            }
+
+
+        }
+
+        func locationManager( manager: CLLocationManager, didFailWithError error: any Error) {
+            print(error)
+        }
+
+        func locationManagerDidChangeAuthorization( manager: CLLocationManager) {
+            //Detect if user allowed location
+            if manager.authorizationStatus == .authorizedWhenInUse {
+
+                currentUserLocation = nil
+                manager.requestLocation()
+            }
+        }
+
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
+            currentUserLocation = locations.last?.coordinate
+
+            coordinateString = "(currentUserLocation?.latitude ?? 0),(currentUserLocation?.longitude ?? 0)"
+
+            if currentUserLocation != nil {
+                // call business search
+
+            }
+
+            manager.stopUpdatingLocation()
+        }
+
 }
 
 
