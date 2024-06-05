@@ -58,16 +58,28 @@ class WeatherModel: NSObject, CLLocationManagerDelegate {
     
     func getWeatherView(currentData: CurrentData) -> WeatherView {
         let name:String? = currentData.location.name
+        let country: String? = currentData.location.country
         let temperature: Int? = Int(currentData.current.temp_f ?? 0)
         let weatherDescription: String? = currentData.current.condition?.text
         let maxTemp: Int? = Int(currentData.forecast.forecastday[0].day?.maxtemp_f ?? 0)
         let minTemp: Int? = Int(currentData.forecast.forecastday[0].day?.mintemp_f ?? 0)
         
+//        var hourlyTemps: [Int?]? = []
+//        for hour in currentData.forecast.forecastday[0].hour! {
+//            hourlyTemps?.append(Int(hour.temp_f ?? 0))
+//        }
+        let hourly: [Hour]? = currentData.forecast.forecastday[0].hour
+        
+        
+        
         return WeatherView(name: name,
+                           country: country,
                            temperature: temperature,
                            weatherDescription: weatherDescription,
                            maxTemp: maxTemp,
-                           minTemp: minTemp)
+                           minTemp: minTemp,
+                           hourly: hourly,
+                           weatherData: currentData)
     }
     
     func getUserLocation() {
