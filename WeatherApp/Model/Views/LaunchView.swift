@@ -17,6 +17,10 @@ struct LaunchView: View {
     var body: some View {
         
         TabView {
+            
+            if weatherModel.coordinateString != nil {
+                LocationWeatherView()
+            }
 
             ForEach(Array(cityNames.enumerated()), id: \.1) { index, name in
                 VStack {
@@ -46,6 +50,8 @@ struct LaunchView: View {
                     }
                 }
             }
+            
+            weatherModel.getUserLocation()
         }
         .ignoresSafeArea()
         

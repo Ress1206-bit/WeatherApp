@@ -102,9 +102,6 @@ struct LocationWeatherView: View {
                     LoadingView()
                     Spacer()
                 }
-                .onAppear {
-                    weatherModel.getUserLocation()
-                }
             }
         
 
