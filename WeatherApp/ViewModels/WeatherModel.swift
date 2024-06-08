@@ -6,11 +6,24 @@
 //
 
 import Foundation
+import CoreLocation
 
 @Observable
-class WeatherModel {
-    
+class WeatherModel: NSObject, CLLocationManagerDelegate {
+
     var cityNames: [String] = ["London", "Atlanta"]
+
+    var currentUserLocation: CLLocationCoordinate2D?
+    var locationManager = CLLocationManager()
+
+    var coordinateString: String?
+
+
+    override init() {
+        super.init()
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.delegate = self
+    }
     
     func apiCall(cityName: String) async -> CurrentData? {
         let apiKey = "660bf5506b9c4285b82181711243105"
@@ -43,9 +56,52 @@ class WeatherModel {
         return nil
     }
     
-    func getWeatherView(currentData: CurrentData) -> WeatherView {        
+    func getWeatherView(currentData: CurrentData) -> WeatherView {
         return WeatherView(weatherData: currentData)
     }
+    
+    func getUserLocation() {
+
+        // Checks that we have permission
+        if locationManager.authorizationStatus == .authorizedWhenInUse {
+            currentUserLocation = nil
+            locationManager.requestLocation()
+        }
+        else {
+            locationManager.requestWhenInUseAuthorization()
+        }
+
+
+    }
+
+    func locationManager( _ manager: CLLocationManager, didFailWithError error: any Error) {
+        print(error)
+    }
+
+    func locationManagerDidChangeAuthorization( _ manager: CLLocationManager) {
+        //Detect if user allowed location
+        if manager.authorizationStatus == .authorizedWhenInUse {
+
+            currentUserLocation = nil
+            manager.requestLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
+        currentUserLocation = locations.last?.coordinate
+
+        coordinateString = "\(currentUserLocation?.latitude ?? 0),\(currentUserLocation?.longitude ?? 0)"
+
+        if currentUserLocation != nil {
+            // call business search
+
+        }
+
+        manager.stopUpdatingLocation()
+    }
+    
+    
     
     func formatDateHourly(_ dateString: String) -> String? {
         let inputFormatter = DateFormatter()
