@@ -194,21 +194,6 @@ class WeatherModel: NSObject, CLLocationManagerDelegate {
         }
         return sf
     }
-//
-//    func loadWeatherViews() -> [WeatherView] {
-//        
-//        var weatherViews: [WeatherView] = []
-//        
-//        for name in cityNames {
-//            Task {
-//                if let model = await apiCall(cityName: name) {
-//                    weatherViews.append(getWeatherView(currentData: model))
-//                }
-//            }
-//        }
-//        
-//        return weatherViews
-//    }
 }
 
 
