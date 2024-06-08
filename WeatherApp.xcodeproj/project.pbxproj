@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F0148BC2C13FA3000BEEA2F /* ForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0148BB2C13FA3000BEEA2F /* ForecastView.swift */; };
 		1FEF378E2C0A532100E5BB3B /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEF378D2C0A532100E5BB3B /* WeatherData.swift */; };
 		6B2E2D0B2C090159003D4DD4 /* WeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2E2D0A2C090159003D4DD4 /* WeatherApp.swift */; };
 		6B2E2D0D2C090159003D4DD4 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2E2D0C2C090159003D4DD4 /* LaunchView.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F0148BB2C13FA3000BEEA2F /* ForecastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastView.swift; sourceTree = "<group>"; };
 		1FEF378D2C0A532100E5BB3B /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		6B2E2D072C090159003D4DD4 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B2E2D0A2C090159003D4DD4 /* WeatherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApp.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				6B2E2D0C2C090159003D4DD4 /* LaunchView.swift */,
 				6B2E2D182C090DC3003D4DD4 /* WeatherView.swift */,
 				6BA44FDD2C0D09CD008B6F01 /* LoadingView.swift */,
+				1F0148BB2C13FA3000BEEA2F /* ForecastView.swift */,
 			);
 			name = Views;
 			path = Model/Views;
@@ -178,6 +181,7 @@
 				6B2E2D0D2C090159003D4DD4 /* LaunchView.swift in Sources */,
 				1FEF378E2C0A532100E5BB3B /* WeatherData.swift in Sources */,
 				6B2E2D192C090DC3003D4DD4 /* WeatherView.swift in Sources */,
+				1F0148BC2C13FA3000BEEA2F /* ForecastView.swift in Sources */,
 				6B2E2D0B2C090159003D4DD4 /* WeatherApp.swift in Sources */,
 				6BA44FDB2C0BAF92008B6F01 /* WeatherModel.swift in Sources */,
 			);

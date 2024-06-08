@@ -43,32 +43,102 @@ class WeatherModel {
         return nil
     }
     
-    func getWeatherView(currentData: CurrentData) -> WeatherView {
-        let name:String? = currentData.location.name
-        let country: String? = currentData.location.country
-        let temperature: Int? = Int(currentData.current.temp_f ?? 0)
-        let weatherDescription: String? = currentData.current.condition?.text
-        let maxTemp: Int? = Int(currentData.forecast.forecastday[0].day?.maxtemp_f ?? 0)
-        let minTemp: Int? = Int(currentData.forecast.forecastday[0].day?.mintemp_f ?? 0)
-        
-//        var hourlyTemps: [Int?]? = []
-//        for hour in currentData.forecast.forecastday[0].hour! {
-//            hourlyTemps?.append(Int(hour.temp_f ?? 0))
-//        }
-        let hourly: [Hour]? = currentData.forecast.forecastday[0].hour
-        
-        
-        
-        return WeatherView(name: name,
-                           country: country,
-                           temperature: temperature,
-                           weatherDescription: weatherDescription,
-                           maxTemp: maxTemp,
-                           minTemp: minTemp,
-                           hourly: hourly,
-                           weatherData: currentData)
+    func getWeatherView(currentData: CurrentData) -> WeatherView {        
+        return WeatherView(weatherData: currentData)
     }
-//    
+    
+    func formatDateHourly(_ dateString: String) -> String? {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        inputFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Adjust this if the date strings are in a different time zone
+
+        if let date = inputFormatter.date(from: dateString) {
+            let outputFormatter = DateFormatter()
+            outputFormatter.dateFormat = "h:mm a"
+            outputFormatter.amSymbol = "AM"
+            outputFormatter.pmSymbol = "PM"
+            outputFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Same as input time zone
+
+            let formattedDate = outputFormatter.string(from: date)
+            return formattedDate
+        } else {
+            return nil
+        }
+    }
+    
+    func formateDateDaily(_ dateString: String) -> String? {
+        // Create a date formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        // Convert the input string to a Date object
+        guard let date = dateFormatter.date(from: dateString) else {
+            return nil
+        }
+        
+        // Change the date formatter to output the day of the week
+        dateFormatter.dateFormat = "EEE"
+        
+        // Convert the date back to a string
+        let dayOfWeekString = dateFormatter.string(from: date)
+        
+        return dayOfWeekString
+    }
+    
+    func conditionCodeIntoSFSymbol(code: Int, isDaytime: Bool) -> String {
+        var sf = ""
+        switch code {
+        case 1000: //clear
+            if isDaytime {
+                sf = "sun.max.fill"
+            }
+            else {
+                sf = "moon.stars.fill"
+            }
+        case 1003: //partly cloudy
+            if isDaytime {
+                sf = "cloud.sun.fill"
+            }
+            else {
+                sf = "cloud.moon.fill"
+            }
+        case 1006: //cloudy
+            sf = "cloud.fill"
+        case 1009: //overcast
+            sf = "smoke.fill"
+        case 1030, 1135, 1147: //misty, fog, freezing fog
+            sf = "cloud.fog.fill"
+        case 1063: //patchy rain
+            if isDaytime {
+                sf = "cloud.sun.rain.fill"
+            }
+            else {
+                sf = "cloud.moon.rain.fill"
+            }
+        case 1066, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258: //patchy snow, patchy light snow, light snow, patchy moderate snow, moderate snow, patchy heavy snow, heavy snow, light snow showers, moderate or heavy snow showers
+            sf = "cloud.snow.fill"
+        case 1069, 1204, 1207, 1249, 1252: //patchy sleet, light sleet, moderate or heavy sleet, light sleet showers, moderate or heavy sleet showers
+            sf = "cloud.sleet.fill"
+        case 1072, 1150, 1153, 1168, 1171, 1180, 1198, 1240: //patchy freezing drizzle, patchy light drizzle, light drizzle, freezing drizzle, heavy freezing drizzle, patchy light rain, light freezing rain, light rain shower,
+            sf = "cloud.drizzle.fill"
+        case 1087: //thundery outbreaks
+            sf = "cloud.bolt.fill"
+        case 1114, 1117: //blowing snow, blizzard
+            sf = "wind.snow"
+        case 1183, 1186, 1189: //light rain, moderate rain at times, moderate rain
+            sf = "cloud.rain.fill"
+        case 1192, 1195, 1201, 1243, 1246: //heavy rain at times, heavy rain, moderate or heavy freezing rain, moderate or heavy rain shower, torrential rain shower
+            sf = "cloud.heavyrain.fill"
+        case 1237, 1261, 1264: //ice pellets, light showers of ice pellets, moderate or heavy showers of ice pellets
+            sf = "cloud.hail.fill"
+        case 1273, 1276, 1279, 1282: //patchy light rain with thunder, moderate or heavy rain with thunder, patchy light snow with thunder, moderate or heavy snow with thunder
+            sf = "cloud.bolt.rain.fill"
+        default:
+            sf = "sun.max.trianglebadge.exclamationmark.fill"
+        }
+        return sf
+    }
+//
 //    func loadWeatherViews() -> [WeatherView] {
 //        
 //        var weatherViews: [WeatherView] = []
