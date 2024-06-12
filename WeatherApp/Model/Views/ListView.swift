@@ -80,8 +80,8 @@ struct ListView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
                 }
-                .padding([.horizontal, .top])
-                .padding(.bottom, -25)
+                .padding(.horizontal)
+                .padding(.top, 25)
                 
                 if boolDataLoaded {
                     
@@ -96,6 +96,14 @@ struct ListView: View {
                                 WeatherBlockView(name: name, temperature: Int(temp), maxTemp: Int(maxTemp), minTemp: Int(minTemp))
                                     .padding(.horizontal, -30)
                                     .padding(.vertical, -20)
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            weatherModel.cityNames.remove(at: index)
+                                            currentDataArray.remove(at: index)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                                 
                                 
                             } else {

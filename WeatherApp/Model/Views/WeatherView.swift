@@ -77,7 +77,7 @@ struct WeatherView: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
                             .frame(width: 350, height: 160)
-                            .foregroundStyle(.black.opacity(0.25))
+                            .foregroundStyle(.black.opacity(0.35))
                             .shadow(color: .white, radius: 50)
                         TabView {
                             HStack {
@@ -155,7 +155,7 @@ struct WeatherView: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
                             .frame(width: 350, height: 160)
-                            .foregroundStyle(.black.opacity(0.25))
+                            .foregroundStyle(.black.opacity(0.35))
                             .shadow(color: .white, radius: 50)
                         HStack {
                             Spacer()
@@ -187,7 +187,7 @@ struct WeatherView: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
                             .frame(width: 350, height: 160)
-                            .foregroundStyle(.black.opacity(0.25))
+                            .foregroundStyle(.black.opacity(0.35))
                             .shadow(color: .white, radius: 50)
                         VStack {
                             Spacer()

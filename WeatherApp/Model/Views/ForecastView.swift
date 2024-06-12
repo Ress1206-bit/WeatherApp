@@ -18,7 +18,7 @@ struct ForecastView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
                 .frame(width: 350, height: 200)
-                .foregroundStyle(.black.opacity(0.25))
+                .foregroundStyle(.black.opacity(0.35))
                 .shadow(color: .white, radius: 50)
             VStack {
                 Picker("", selection: $selectedTab) {
