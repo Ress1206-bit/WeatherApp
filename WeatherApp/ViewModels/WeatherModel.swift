@@ -11,12 +11,14 @@ import CoreLocation
 @Observable
 class WeatherModel: NSObject, CLLocationManagerDelegate {
 
-    var cityNames: [String] = ["London", "Atlanta"]
+    var cityNames: [String] = ["London", "Atlanta", "Dunwoody"]
 
     var currentUserLocation: CLLocationCoordinate2D?
     var locationManager = CLLocationManager()
 
     var coordinateString: String?
+    
+    private var selectedMeasurement = "fahrenheit"
 
 
     override init() {
@@ -193,6 +195,23 @@ class WeatherModel: NSObject, CLLocationManagerDelegate {
             sf = "sun.max.trianglebadge.exclamationmark.fill"
         }
         return sf
+    }
+    
+    func setSelectedMeasurement(value: String) {
+        selectedMeasurement = value
+    }
+    
+    func getSelectedMeasurement() -> String {
+        return selectedMeasurement
+    }
+    
+    func convertToCelsius(temperature: Int) -> Int {
+        if selectedMeasurement == "celsius" {
+            let celsius = (temperature - 32) * 5 / 9
+            return celsius
+        }
+        
+        return temperature
     }
 }
 

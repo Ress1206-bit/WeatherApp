@@ -20,11 +20,23 @@ struct WeatherView: View {
                 .foregroundStyle(.blue)
                 .ignoresSafeArea()
             VStack {
+                
+                HStack {
+                    Spacer()
+                    
+                    NavigationLink(destination: ListView()) {
+                        Image(systemName: "list.bullet")
+                            .foregroundStyle(.white)
+                            .font(.system(size: 30))
+                            .padding(.trailing, 25)
+                    }
+                }
+                
                 Text(weatherData?.location.name ?? "- -")
                     .font(.largeTitle)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
-                    .padding(.top, 35)
+                    .padding(.top, 15)
                 if weatherData?.location.country == "United States of America" {
                     Text("\(weatherData?.location.region ?? "- -"), USA")
                         .font(.headline)
@@ -225,4 +237,5 @@ struct WeatherView: View {
 
 #Preview {
     WeatherView()
+        .environment(WeatherModel())
 }
