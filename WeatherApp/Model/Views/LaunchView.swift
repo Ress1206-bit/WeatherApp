@@ -91,7 +91,9 @@ struct LaunchView: View {
                 
                 ZStack {
                     Rectangle()
+                        .environment(\.colorScheme, .light)
                         .background(.ultraThinMaterial)
+                        
                     HStack {
                         VStack {
                             Spacer()
@@ -146,4 +148,5 @@ struct LaunchView: View {
 #Preview {
     LaunchView()
         .environment(WeatherModel())
+        .environment(CityModel())
 }

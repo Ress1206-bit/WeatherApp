@@ -13,13 +13,23 @@ struct WeatherBlockView: View {
     var temperature: Int?
     var maxTemp: Int?
     var minTemp: Int?
+    var imageName: String?
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .frame(height: 135)
-                .padding()
-                .foregroundStyle(.blue)
+            if let imageName = self.imageName {
+                Image(imageName)
+                    .centerFilled()
+                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                    .ignoresSafeArea()
+                    .frame(height: 135)
+                    .padding()
+            } else {
+                RoundedRectangle(cornerRadius: 30)
+                    .frame(height: 135)
+                    .padding()
+                    .foregroundStyle(.blue)
+            }
             
             HStack{
                 VStack{
@@ -27,6 +37,7 @@ struct WeatherBlockView: View {
                         .foregroundStyle(.white)
                         .font(.system(size: 30))
                         .padding(5)
+                        .shadow(color: .black, radius: 11)
                     Spacer()
                 }
                 .frame(height: 120)
@@ -38,11 +49,13 @@ struct WeatherBlockView: View {
                     Text("\(temperature ?? 0)")
                         .foregroundStyle(.white)
                         .font(.system(size: 65))
+                        .shadow(color: .black, radius: 11)
                     
                     Text("H:\(maxTemp ?? 0)° L:\(minTemp ?? 0)°")
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
                         .padding(.bottom, 20)
+                        .shadow(color: .black, radius: 11)
                 }
             }
             .frame(width: 320)

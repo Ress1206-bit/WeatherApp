@@ -12,11 +12,13 @@ struct WeatherApp: App {
     var body: some Scene {
         
         @State var weatherModel = WeatherModel()
+        @State var cityModel = CityModel()
         
         
         WindowGroup {
             LaunchView()
                 .environment(weatherModel)
+                .environment(cityModel)
         }
     }
 }
