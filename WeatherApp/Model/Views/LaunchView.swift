@@ -19,6 +19,8 @@ struct LaunchView: View {
         NavigationStack {
             
             ZStack(alignment: .bottom){
+                
+                Color.white
                  
                 TabView(selection: $selectedTab) {
                     
