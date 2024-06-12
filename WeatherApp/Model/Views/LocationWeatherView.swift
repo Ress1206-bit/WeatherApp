@@ -27,6 +27,18 @@ struct LocationWeatherView: View {
                         .foregroundStyle(.blue)
                         .ignoresSafeArea()
                     VStack {
+                        
+                        HStack {
+                            Spacer()
+                            
+                            NavigationLink(destination: ListView()) {
+                                Image(systemName: "list.bullet")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 30))
+                                    .padding(.trailing, 25)
+                            }
+                        }
+                        
                         Text("My Location")
                             .font(.largeTitle)
                             .fontWeight(.medium)
