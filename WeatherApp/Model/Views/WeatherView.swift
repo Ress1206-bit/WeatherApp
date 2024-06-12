@@ -16,39 +16,48 @@ struct WeatherView: View {
     var body: some View {
         
         ZStack{
-            Rectangle()
-                .foregroundStyle(.blue)
+            Image(weatherModel.conditionCodeIntoBg(code:  Int(weatherData?.current.condition?.code ?? 0), isDaytime: weatherModel.isDaytime(currTime: String(weatherModel.formatDateHourly(String(weatherData?.location.localtime ?? "0000-00-00 00:00")) ?? "01:00 AM"), sunriseTime: String(weatherData?.forecast.forecastday[0].astro?.sunrise ?? "00:00 AM"), sunsetTime: String(weatherData?.forecast.forecastday[0].astro?.sunset ?? "24:00 PM"))))
+                .centerFilled()
+                .clipShape(.rect())
                 .ignoresSafeArea()
+            
             VStack {
                 Text(weatherData?.location.name ?? "- -")
+                    .shadow(color: .black, radius: 11)
                     .font(.largeTitle)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                     .padding(.top, 35)
                 if weatherData?.location.country == "United States of America" {
                     Text("\(weatherData?.location.region ?? "- -"), USA")
+                        .shadow(color: .black, radius: 11)
                         .font(.headline)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                 } else {
                     Text(weatherData?.location.country ?? "- -")
+                        .shadow(color: .black, radius: 11)
                         .font(.headline)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                 }
                 ScrollView {
                     Text("\(Int(weatherData?.current.temp_f ?? 999))°")
+                        .shadow(color: .black, radius: 11)
                         .font(.system(size: 100))
                         .fontWeight(.thin)
                         .foregroundStyle(.white)
                         .padding(.leading, 20)
                     Text("Feels Like: \(String(Int(weatherData?.current.feelslike_f ?? 999)))º")
+                        .shadow(color: .black, radius: 11)
                         .foregroundStyle(.white)
                         .fontWeight(.medium)
                     Text("\(weatherData?.current.condition?.text ?? "- -")")
+                        .shadow(color: .black, radius: 11)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                     Text("H:\(Int(weatherData?.forecast.forecastday[0].day?.maxtemp_f ?? 999))° L:\(Int(weatherData?.forecast.forecastday[0].day?.mintemp_f ?? -999))°")
+                        .shadow(color: .black, radius: 11)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                         .padding(.bottom, 50)
@@ -220,6 +229,18 @@ struct WeatherView: View {
             }
         }
 
+    }
+}
+
+extension Image {
+    func centerFilled() -> some View {
+        Color.clear
+        .overlay(
+            self
+            .resizable()
+            .scaledToFill()
+        )
+        .clipped()
     }
 }
 

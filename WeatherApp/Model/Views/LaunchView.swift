@@ -60,36 +60,39 @@ struct LaunchView: View {
             }
             .ignoresSafeArea()
             
-            HStack {
-                VStack {
-                    Spacer()
-                    HStack {
+            ZStack {
+                Rectangle()
+                    .background(.ultraThinMaterial)
+                HStack {
+                    VStack {
                         Spacer()
-                        HStack(spacing: 8) {
-                            
-                            if weatherModel.coordinateString != nil {
-                                ForEach(0..<weatherModel.cityNames.count + 1, id:\.self) { index in
-                                    Circle()
-                                        .fill(index == selectedTab ? Color.white : Color.black.opacity(0.75))
-                                        .frame(width: 8, height: 8)
+                        HStack {
+                            Spacer()
+                            HStack(spacing: 8) {
+                                
+                                if weatherModel.coordinateString != nil {
+                                    ForEach(0..<weatherModel.cityNames.count + 1, id:\.self) { index in
+                                        Circle()
+                                            .fill(index == selectedTab ? Color.white : Color.black.opacity(0.75))
+                                            .frame(width: 8, height: 8)
+                                    }
+                                }
+                                else {
+                                    ForEach(0..<weatherModel.cityNames.count, id:\.self) { index in
+                                        Circle()
+                                            .fill(index == selectedTab ? Color.white : Color.black.opacity(0.75))
+                                            .frame(width: 8, height: 8)
+                                    }
                                 }
                             }
-                            else {
-                                ForEach(0..<weatherModel.cityNames.count, id:\.self) { index in
-                                    Circle()
-                                        .fill(index == selectedTab ? Color.white : Color.black.opacity(0.75))
-                                        .frame(width: 8, height: 8)
-                                }
-                            }
+                            .padding(10)
+                            .cornerRadius(10)
+                            .padding(.bottom, 20)
+                            Spacer()
                         }
-                        .padding(10)
-                        .cornerRadius(10)
-                        .padding(.bottom, 20)
-                        Spacer()
                     }
                 }
             }
-            .background(.blue)
             .border(.black.opacity(0.25))
             .frame(height:40)
         }

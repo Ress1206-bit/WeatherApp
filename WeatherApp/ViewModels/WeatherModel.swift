@@ -11,7 +11,7 @@ import CoreLocation
 @Observable
 class WeatherModel: NSObject, CLLocationManagerDelegate {
 
-    var cityNames: [String] = ["London", "Atlanta"]
+    var cityNames: [String] = ["Los Angeles", "Cairo", "Barcelona", "Sydney", "London", "Seattle", "Mumbai", "Moscow", "Calgary", "Miami"]
 
     var currentUserLocation: CLLocationCoordinate2D?
     var locationManager = CLLocationManager()
@@ -193,6 +193,92 @@ class WeatherModel: NSObject, CLLocationManagerDelegate {
             sf = "sun.max.trianglebadge.exclamationmark.fill"
         }
         return sf
+    }
+    
+    func conditionCodeIntoBg(code: Int, isDaytime: Bool) -> String {
+        var bg = ""
+        switch code {
+        case 1000: //clear
+            if isDaytime {
+                bg = "sunny sky"
+            }
+            else {
+                bg = "night sky"
+            }
+        case 1003: //partly cloudy
+            if isDaytime {
+                bg = "partly cloudy day"
+            }
+            else {
+                bg = "partly cloudy night"
+            }
+        case 1006: //cloudy
+            if isDaytime {
+                bg = "cloudy"
+            }
+            else {
+                bg = "partly cloudy night"
+            }
+        case 1009, 1030, 1135, 1147: //overcast, misty, fog, freezing fog
+            bg = "overcast"
+        case 1063: //patchy rain
+            if isDaytime {
+                bg = "rain light"
+            }
+            else {
+                bg = "rain dark"
+            }
+        case 1066, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258: //patchy snow, patchy light snow, light snow, patchy moderate snow, moderate snow, patchy heavy snow, heavy snow, light snow showers, moderate or heavy snow showers
+            bg = "snow"
+        case 1069, 1204, 1207, 1249, 1252: //patchy sleet, light sleet, moderate or heavy sleet, light sleet showers, moderate or heavy sleet showers
+            bg = "hail"
+        case 1072, 1150, 1153, 1168, 1171, 1180, 1198, 1240: //patchy freezing drizzle, patchy light drizzle, light drizzle, freezing drizzle, heavy freezing drizzle, patchy light rain, light freezing rain, light rain shower,
+            if isDaytime {
+                bg = "rain light"
+            }
+            else {
+                bg = "rain dark"
+            }
+        case 1114, 1117: //blowing snow, blizzard
+            bg = "snow"
+        case 1183, 1186, 1189: //light rain, moderate rain at times, moderate rain
+            if isDaytime {
+                bg = "rain light"
+            }
+            else {
+                bg = "rain dark"
+            }
+        case 1192, 1195, 1201, 1243, 1246: //heavy rain at times, heavy rain, moderate or heavy freezing rain, moderate or heavy rain shower, torrential rain shower
+            if isDaytime {
+                bg = "rain light"
+            }
+            else {
+                bg = "rain dark"
+            }
+        case 1237, 1261, 1264: //ice pellets, light showers of ice pellets, moderate or heavy showers of ice pellets
+            bg = "hail"
+        case 1273, 1276, 1279, 1282, 1087: //patchy light rain with thunder, moderate or heavy rain with thunder, patchy light snow with thunder, moderate or heavy snow with thunder
+            bg = "thunderstorm"
+        default:
+            bg = "sunny sky"
+        }
+        return bg
+    }
+    
+    func isDaytime(currTime: String, sunriseTime: String, sunsetTime: String) -> Bool {
+        
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "hh:mm a"
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            
+        guard let current = dateFormatter.date(from: currTime),
+              let sunrise = dateFormatter.date(from: sunriseTime),
+              let sunset = dateFormatter.date(from: sunsetTime) else {
+            print("Date conversion failed")
+            return false
+        }
+        
+        return current >= sunrise && current <= sunset
     }
 }
 
