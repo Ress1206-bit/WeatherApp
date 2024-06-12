@@ -35,13 +35,7 @@ struct ForecastView: View {
                         HStack {
                             let currTime = String(weatherModel.formatDateHourly(String(weatherData?.location.localtime ?? "0000-00-00 00:00")) ?? "00")
                             
-                            let isDaytimeNow = { (time: String) -> Bool in
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "hh:mm a"
-                                guard let date = dateFormatter.date(from: time) else { return false }
-                                let hour = Calendar.current.component(.hour, from: date)
-                                return hour >= 6 && hour <= 20
-                            }(currTime)
+                            let isDaytimeNow = weatherModel.isDaytime(currTime: currTime, sunriseTime: String(weatherData?.forecast.forecastday[0].astro?.sunrise ?? "00:00 AM"), sunsetTime: String(weatherData?.forecast.forecastday[0].astro?.sunset ?? "24:00 PM"))
                             
                             VStack{
                                 Text("Now")
@@ -70,14 +64,7 @@ struct ForecastView: View {
                                         if Int(hour.time_epoch ?? 00) > Int(weatherData?.location.localtime_epoch ?? 01) {
                                             let hourTime = String(weatherModel.formatDateHourly(String(hour.time ?? "0000-00-00 00:00")) ?? "00")
                                             
-                                            
-                                            let isDaytime = { (hourTime: String) -> Bool in
-                                                let dateFormatter = DateFormatter()
-                                                dateFormatter.dateFormat = "hh:mm a"
-                                                guard let date = dateFormatter.date(from: hourTime) else { return false }
-                                                let hour = Calendar.current.component(.hour, from: date)
-                                                return hour >= 6 && hour <= 20
-                                            }(hourTime)
+                                            let isDaytime = weatherModel.isDaytime(currTime: hourTime, sunriseTime: String(weatherData?.forecast.forecastday[num].astro?.sunrise ?? "00:00 AM"), sunsetTime: String(weatherData?.forecast.forecastday[num].astro?.sunset ?? "24:00 PM"))
                                             
                                             
                                             VStack{
@@ -91,6 +78,7 @@ struct ForecastView: View {
                                                     .frame(height:25)
                                                     .scaledToFit()
                                                     .font(.system(size: 20))
+
                                                 if Int(hour.chance_of_rain ?? 00) > 0 {
                                                     Text("\(Int(hour.chance_of_rain ?? 00))%")
                                                         .foregroundStyle(Color.cyan)
