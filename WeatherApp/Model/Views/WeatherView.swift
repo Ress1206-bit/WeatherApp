@@ -28,12 +28,12 @@ struct WeatherView: View {
                     
                     NavigationLink(destination: ListView()) {
                         Image(systemName: "list.bullet")
+                            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 11)
                             .foregroundStyle(.white)
                             .font(.system(size: 30))
                             .padding(.trailing, 25)
                     }
                 }
-                
                 Text(weatherData?.location.name ?? "- -")
                     .shadow(color: .black, radius: 11)
                     .font(.largeTitle)
@@ -54,13 +54,13 @@ struct WeatherView: View {
                         .foregroundStyle(.white)
                 }
                 ScrollView {
-                    Text("\(Int(weatherData?.current.temp_f ?? 999))°")
+                    Text("\(weatherModel.convertToCelsius(temperature: Int(weatherData?.current.temp_f ?? 999)))°")
                         .shadow(color: .black, radius: 11)
                         .font(.system(size: 100))
                         .fontWeight(.thin)
                         .foregroundStyle(.white)
                         .padding(.leading, 20)
-                    Text("Feels Like: \(String(Int(weatherData?.current.feelslike_f ?? 999)))º")
+                    Text("Feels Like: \(String(weatherModel.convertToCelsius(temperature: Int(weatherData?.current.feelslike_f ?? 999))))º")
                         .shadow(color: .black, radius: 11)
                         .foregroundStyle(.white)
                         .fontWeight(.medium)
@@ -68,7 +68,7 @@ struct WeatherView: View {
                         .shadow(color: .black, radius: 11)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
-                    Text("H:\(Int(weatherData?.forecast.forecastday[0].day?.maxtemp_f ?? 999))° L:\(Int(weatherData?.forecast.forecastday[0].day?.mintemp_f ?? -999))°")
+                    Text("H:\(weatherModel.convertToCelsius(temperature: Int(weatherData?.forecast.forecastday[0].day?.maxtemp_f ?? 999)))° L:\(weatherModel.convertToCelsius(temperature: Int(weatherData?.forecast.forecastday[0].day?.mintemp_f ?? -999)))°")
                         .shadow(color: .black, radius: 11)
                         .fontWeight(.medium)
                         .foregroundStyle(.white)

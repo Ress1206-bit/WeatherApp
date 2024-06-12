@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WeatherBlockView: View {
     
+    @Environment(WeatherModel.self) var weatherModel
+    
     @State var name: String?
     var temperature: Int?
     var maxTemp: Int?
@@ -46,12 +48,12 @@ struct WeatherBlockView: View {
                 Spacer()
                 
                 VStack{
-                    Text("\(temperature ?? 0)")
+                    Text("\(weatherModel.convertToCelsius(temperature: temperature ?? 0))")
                         .foregroundStyle(.white)
                         .font(.system(size: 65))
                         .shadow(color: .black, radius: 11)
                     
-                    Text("H:\(maxTemp ?? 0)° L:\(minTemp ?? 0)°")
+                    Text("H:\(weatherModel.convertToCelsius(temperature: maxTemp ?? 0))° L:\(weatherModel.convertToCelsius(temperature: minTemp ?? 0))°")
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
                         .padding(.bottom, 20)

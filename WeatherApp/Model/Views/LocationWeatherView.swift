@@ -23,9 +23,11 @@ struct LocationWeatherView: View {
             if weatherModel.coordinateString != nil {
                 
                 ZStack{
-                    Rectangle()
-                        .foregroundStyle(.blue)
+                    Image(weatherModel.conditionCodeIntoBg(code:  Int(weatherData?.current.condition?.code ?? 0), isDaytime: weatherModel.isDaytime(currTime: String(weatherModel.formatDateHourly(String(weatherData?.location.localtime ?? "0000-00-00 00:00")) ?? "01:00 AM"), sunriseTime: String(weatherData?.forecast.forecastday[0].astro?.sunrise ?? "00:00 AM"), sunsetTime: String(weatherData?.forecast.forecastday[0].astro?.sunset ?? "24:00 PM"))))
+                        .centerFilled()
+                        .clipShape(.rect())
                         .ignoresSafeArea()
+                    
                     VStack {
                         
                         HStack {
@@ -33,34 +35,49 @@ struct LocationWeatherView: View {
                             
                             NavigationLink(destination: ListView()) {
                                 Image(systemName: "list.bullet")
+                                    .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 11)
                                     .foregroundStyle(.white)
                                     .font(.system(size: 30))
                                     .padding(.trailing, 25)
                             }
                         }
                         
-                        Text("My Location")
+                        Text(weatherData?.location.name ?? "- -")
+                            .shadow(color: .black, radius: 11)
                             .font(.largeTitle)
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
-                            .padding(.top, 35)
-                        Text("\(weatherData?.location.name ?? "- -")")
-                            .font(.headline)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.white)
+                            .padding(.top, 15)
+                        if weatherData?.location.country == "United States of America" {
+                            Text("\(weatherData?.location.region ?? "- -"), USA")
+                                .shadow(color: .black, radius: 11)
+                                .font(.headline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.white)
+                        } else {
+                            Text(weatherData?.location.country ?? "- -")
+                                .shadow(color: .black, radius: 11)
+                                .font(.headline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.white)
+                        }
                         ScrollView {
-                            Text("\(Int(weatherData?.current.temp_f ?? 999))°")
+                            Text("\(weatherModel.convertToCelsius(temperature: Int(weatherData?.current.temp_f ?? 999)))°")
+                                .shadow(color: .black, radius: 11)
                                 .font(.system(size: 100))
                                 .fontWeight(.thin)
                                 .foregroundStyle(.white)
                                 .padding(.leading, 20)
-                            Text("Feels Like: \(String(Int(weatherData?.current.feelslike_f ?? 999)))º")
+                            Text("Feels Like: \(String(weatherModel.convertToCelsius(temperature: Int(weatherData?.current.feelslike_f ?? 999))))º")
+                                .shadow(color: .black, radius: 11)
                                 .foregroundStyle(.white)
                                 .fontWeight(.medium)
                             Text("\(weatherData?.current.condition?.text ?? "- -")")
+                                .shadow(color: .black, radius: 11)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.white)
-                            Text("H:\(Int(weatherData?.forecast.forecastday[0].day?.maxtemp_f ?? 999))° L:\(Int(weatherData?.forecast.forecastday[0].day?.mintemp_f ?? -999))°")
+                            Text("H:\(weatherModel.convertToCelsius(temperature: Int(weatherData?.forecast.forecastday[0].day?.maxtemp_f ?? 999)))° L:\(weatherModel.convertToCelsius(temperature: Int(weatherData?.forecast.forecastday[0].day?.mintemp_f ?? -999)))°")
+                                .shadow(color: .black, radius: 11)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.white)
                                 .padding(.bottom, 50)
@@ -68,7 +85,7 @@ struct LocationWeatherView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 15)
                                     .frame(width: 350, height: 160)
-                                    .foregroundStyle(.black.opacity(0.25))
+                                    .foregroundStyle(.black.opacity(0.35))
                                     .shadow(color: .white, radius: 50)
                                 TabView {
                                     HStack {
@@ -146,7 +163,7 @@ struct LocationWeatherView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 15)
                                     .frame(width: 350, height: 160)
-                                    .foregroundStyle(.black.opacity(0.25))
+                                    .foregroundStyle(.black.opacity(0.35))
                                     .shadow(color: .white, radius: 50)
                                 HStack {
                                     Spacer()
@@ -178,7 +195,7 @@ struct LocationWeatherView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 15)
                                     .frame(width: 350, height: 160)
-                                    .foregroundStyle(.black.opacity(0.25))
+                                    .foregroundStyle(.black.opacity(0.35))
                                     .shadow(color: .white, radius: 50)
                                 VStack {
                                     Spacer()

@@ -25,6 +25,11 @@ struct ListView: View {
     @State var cityInfoArr: [[String?]] = []
     
     
+    @State var cityNames: [String] = []
+    
+    @State var boolGivenCityNames: Bool = false
+    
+    
     var body: some View {
         
         if isSearching {
@@ -37,7 +42,7 @@ struct ListView: View {
                 
                 VStack {
                     HStack {
-                        TextField("Search for a city or airport", text: $searchText)
+                        TextField("Search for a city", text: $searchText)
                             .focused($isSearchFieldFocused)
                             .padding()
                             .background(Color(.systemGray6))
@@ -53,19 +58,58 @@ struct ListView: View {
                         .padding(.trailing)
                     }
                     
-                    ForEach(cityInfoArr, id:\.self) { cityInfo in
-                        HStack {
-                            Text("\(cityInfo[0]!), \(cityInfo[1]!), \(cityInfo[2]!)")
-                                .font(.system(size: 22))
-                            Spacer()
+                    
+                    Divider()
+                        .overlay(.white)
+                    
+                    ScrollView {
+                        ForEach(cityInfoArr, id:\.self) { cityInfo in
+                            HStack {
+                                Button(action: {
+                                    cityNames.append(cityInfo[0]!)
+                                    weatherModel.cityNames.append(cityInfo[0]!)
+                                    self.isSearching = false
+                                    self.searchText = ""
+                                    self.isSearchFieldFocused = false
+                                }, label: {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundStyle(Color(.systemGray6))
+                                            .frame(height: 50)
+                                            .environment(\.colorScheme, .dark)
+                                        HStack {
+                                            if cityInfo[2]! == "United States of America" {
+                                                Text("\(cityInfo[0]!), \(cityInfo[1]!), USA")
+                                                    .font(.system(size: 16))
+                                                    .foregroundStyle(.white)
+                                                    .padding(.leading)
+                                            }
+                                            else {
+                                                Text("\(cityInfo[0]!), \(cityInfo[2]!)")
+                                                    .font(.system(size: 16))
+                                                    .foregroundStyle(.white)
+                                                    .padding(.leading)
+                                            }
+                                            Spacer()
+                                        }
+                                    }
+                                })
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 2)
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 2)
                     }
+                    .scrollIndicators(.visible)
                     
                     Spacer()
                 }
-                .frame(height: 300)
+                .frame(maxHeight: 350)
+                
+            }
+            .onAppear() {
+                boolDataLoaded = false
             }
             .onChange(of: searchText) {
                 Task {
@@ -96,7 +140,7 @@ struct ListView: View {
                 }) {
                     HStack {
                         Image(systemName: "magnifyingglass")
-                        Text("Search for a city or airport")
+                        Text("Search for a city")
                     }
                     .padding()
                     .background(Color(.systemGray6))
@@ -107,46 +151,59 @@ struct ListView: View {
                 
                 if boolDataLoaded {
                     
-                    List(weatherModel.cityNames, id: \.self) { city in
-                        if let index = weatherModel.cityNames.firstIndex(of: city),
-                           index < currentDataArray.count,
-                           let name = currentDataArray[index][0] as? String,
-                           let temp = currentDataArray[index][1] as? Double,
-                           let maxTemp = currentDataArray[index][2] as? Double,
-                           let minTemp = currentDataArray[index][3] as? Double,
-                           let imageName = weatherModel.conditionCodeIntoBg(
-                            code: currentDataArray[index][4] as? Int ?? 0,
-                            isDaytime: weatherModel.isDaytime(
-                                currTime: currentDataArray[index][5] as? String ?? "",
-                                sunriseTime: currentDataArray[index][6] as? String ?? "",
-                                sunsetTime: currentDataArray[index][7] as? String ?? ""
-                            )) as? String {
-                            
-                            
-                            WeatherBlockView(name: name, temperature: Int(temp), maxTemp: Int(maxTemp), minTemp: Int(minTemp), imageName: imageName)
-                                .padding(.horizontal, -30)
-                                .padding(.vertical, -20)
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive) {
-                                        weatherModel.cityNames.remove(at: index)
-                                        currentDataArray.remove(at: index)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                    NavigationStack {
+                        List(cityNames, id: \.self) { city in
+                            if let index = cityNames.firstIndex(of: city),
+                               index < currentDataArray.count,
+                               let name = currentDataArray[index][0] as? String,
+                               let temp = currentDataArray[index][1] as? Double,
+                               let maxTemp = currentDataArray[index][2] as? Double,
+                               let minTemp = currentDataArray[index][3] as? Double,
+                               let imageName = weatherModel.conditionCodeIntoBg(
+                                code: currentDataArray[index][4] as? Int ?? 0,
+                                isDaytime: weatherModel.isDaytime(
+                                    currTime: currentDataArray[index][5] as? String ?? "",
+                                    sunriseTime: currentDataArray[index][6] as? String ?? "",
+                                    sunsetTime: currentDataArray[index][7] as? String ?? ""
+                                )) as? String {
+                                
+                                
+                                WeatherBlockView(name: name, temperature: Int(temp), maxTemp: Int(maxTemp), minTemp: Int(minTemp), imageName: imageName)
+                                    .padding(.horizontal, -30)
+                                    .padding(.vertical, -20)
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            cityNames.remove(at: index)
+                                            weatherModel.cityNames = cityNames
+                                            currentDataArray.remove(at: index)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
                                     }
-                                }
-                            
-                            
-                        } else {
-                            Text("Error: Data type mismatch")
+                                
+                                
+                            } else {
+                                Text("Error: Data type mismatch")
+                            }
+                        }
+                        .scrollContentBackground(.hidden)
+                    }
+                    .navigationTitle("My Places")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            EditButton()
+                                .padding()
                         }
                     }
-                    .scrollContentBackground(.hidden)
                 }
                 else {
                     LoadingView()
                         .onAppear {
+                            
+                            currentDataArray.removeAll()
+                            
                             Task {
-                                for city in weatherModel.cityNames {
+                                for city in cityNames {
                                     let temporaryModel = await weatherModel.apiCall(cityName: city)
                                     
                                     if let model = temporaryModel {
@@ -157,7 +214,7 @@ struct ListView: View {
                                         dataArray.append(model.forecast.forecastday[0].day?.maxtemp_f ?? 0)
                                         dataArray.append(model.forecast.forecastday[0].day?.mintemp_f ?? 0)
                                         dataArray.append(model.current.condition?.code ?? 0)
-                                        dataArray.append(weatherModel.formatDateHourly(model.location.localtime ?? "01:00 AM"))
+                                        dataArray.append(weatherModel.formatDateHourly(model.location.localtime ?? "0000-00-00 01:00 AM") ?? "01:00 AM")
                                         dataArray.append(model.forecast.forecastday[0].astro?.sunrise ?? "00:00 AM")
                                         dataArray.append(model.forecast.forecastday[0].astro?.sunset ?? "24:00 PM")
                                         
@@ -172,6 +229,11 @@ struct ListView: View {
             }
             .onAppear() {
                 selectedMeasurement = weatherModel.getSelectedMeasurement()
+                
+                if !boolGivenCityNames {
+                    cityNames = weatherModel.cityNames
+                    boolGivenCityNames = true
+                }
             }
 
         }
