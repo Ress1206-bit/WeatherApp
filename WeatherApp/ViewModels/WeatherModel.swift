@@ -11,14 +11,15 @@ import CoreLocation
 @Observable
 class WeatherModel: NSObject, CLLocationManagerDelegate {
 
-    var cityNames: [String] = ["Los Angeles", "Cairo", "Barcelona", "Sydney", "London", "Seattle", "Mumbai", "Moscow", "Calgary", "Miami"]
+    var cityNames: [String] = ["33.93, -84.37", "25.77, -80.19", "48.87, 2.33", "-54.84, -68.3"]
+    private var selectedMeasurement = "fahrenheit"
 
     var currentUserLocation: CLLocationCoordinate2D?
     var locationManager = CLLocationManager()
 
     var coordinateString: String?
     
-    private var selectedMeasurement = "fahrenheit"
+
 
 
     override init() {

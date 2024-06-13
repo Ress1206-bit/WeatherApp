@@ -45,7 +45,11 @@ class CityModel {
     func setCityInfoArr(cityList: [Cities?]) {
         cityInfoArr.removeAll()
         for city in cityList {
-            let cityInfo = [String(city?.name ?? "Unknown Name"), String(city?.region ?? "Unknown Region"), String(city?.country ?? "Unknown Country")]
+            var cityInfo = [String(city?.name ?? "Unknown Name"), String(city?.region ?? "Unknown Region"), String(city?.country ?? "Unknown Country")]
+            let coordinateString = "\(city?.lat ?? 0), \(city?.lon ?? 0)"
+            
+            cityInfo.append(coordinateString)
+            
             cityInfoArr.append(cityInfo)
         }
     }

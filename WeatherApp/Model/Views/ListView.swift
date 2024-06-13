@@ -29,6 +29,7 @@ struct ListView: View {
     
     @State var boolGivenCityNames: Bool = false
     
+    @State private var showAlert = false
     
     var body: some View {
         
@@ -63,39 +64,73 @@ struct ListView: View {
                         .overlay(.white)
                     
                     ScrollView {
-                        ForEach(cityInfoArr, id:\.self) { cityInfo in
-                            HStack {
-                                Button(action: {
-                                    cityNames.append(cityInfo[0]!)
-                                    weatherModel.cityNames.append(cityInfo[0]!)
-                                    self.isSearching = false
-                                    self.searchText = ""
-                                    self.isSearchFieldFocused = false
-                                }, label: {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .foregroundStyle(Color(.systemGray6))
-                                            .frame(height: 50)
-                                            .environment(\.colorScheme, .dark)
-                                        HStack {
-                                            if cityInfo[2]! == "United States of America" {
-                                                Text("\(cityInfo[0]!), \(cityInfo[1]!), USA")
-                                                    .font(.system(size: 16))
-                                                    .foregroundStyle(.white)
-                                                    .padding(.leading)
-                                            }
-                                            else {
-                                                Text("\(cityInfo[0]!), \(cityInfo[2]!)")
-                                                    .font(.system(size: 16))
-                                                    .foregroundStyle(.white)
-                                                    .padding(.leading)
-                                            }
-                                            Spacer()
+                        if cityInfoArr.count > 0 {
+                            ForEach(cityInfoArr, id:\.self) { cityInfo in
+                                HStack {
+                                    Button(action: {
+                                        
+                                        print(cityInfo[0]! + " " + cityInfo[3]!)
+                                        
+                                        if(cityNames.contains(cityInfo[0]!) || cityNames.contains(cityInfo[3]!)) {
+                                            showAlert = true
+                                            print("Show Alert")
                                         }
+                                        else {
+                                            cityNames.append(cityInfo[3]!)
+                                            weatherModel.cityNames.append(cityInfo[3]!)
+                                            self.isSearching = false
+                                            self.searchText = ""
+                                            self.isSearchFieldFocused = false
+                                        }
+                                    }, label: {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .foregroundStyle(Color(.systemGray6))
+                                                .frame(height: 50)
+                                                .environment(\.colorScheme, .dark)
+                                            HStack {
+                                                if cityInfo[2]! == "United States of America" {
+                                                    Text("\(cityInfo[0]!), \(cityInfo[1]!), USA")
+                                                        .font(.system(size: 16))
+                                                        .foregroundStyle(.white)
+                                                        .padding(.leading)
+                                                }
+                                                else {
+                                                    Text("\(cityInfo[0]!), \(cityInfo[2]!)")
+                                                        .font(.system(size: 16))
+                                                        .foregroundStyle(.white)
+                                                        .padding(.leading)
+                                                }
+                                                Spacer()
+                                            }
+                                        }
+                                    })
+                                    .alert(isPresented: $showAlert) {
+                                        Alert(
+                                            title: Text("Already Exists"),
+                                            message: Text("You currently have this location's weather"),
+                                            dismissButton: .default(Text("Okay"))
+                                        )
                                     }
-                                })
-                                
-                                Spacer()
+                                    
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 2)
+                            }
+                        }
+                        else {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 15)
+                                    .foregroundStyle(Color(.systemGray6))
+                                    .frame(height: 50)
+                                    .environment(\.colorScheme, .dark)
+                                HStack {
+                                    Text("No results found, refine your search.")
+                                        .foregroundStyle(.white)
+                                        .padding(.leading)
+                                    Spacer()
+                                }
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 2)
