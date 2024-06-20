@@ -24,7 +24,7 @@ struct LaunchView: View {
                  
                 TabView(selection: $selectedTab) {
                     
-                    if weatherModel.coordinateString != nil {
+                    if weatherModel.getCoordinateString() != ""{
                         LocationWeatherView()
                             .tag(0)
                         
@@ -49,6 +49,7 @@ struct LaunchView: View {
                         }
                     }
                     else {
+                        
                         ForEach(Array(weatherModel.cityNames.enumerated()), id: \.1) { index, name in
                             VStack {
                                 if weatherViews.count == weatherModel.cityNames.count {
@@ -85,6 +86,7 @@ struct LaunchView: View {
                     }
                     
                     weatherModel.getUserLocation()
+                    weatherModel.temporarySelectedMeasurement = weatherModel.getSelectedMeasurement()
                 }
                 .ignoresSafeArea()
                 

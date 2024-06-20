@@ -42,25 +42,17 @@ struct LocationWeatherView: View {
                             }
                         }
                         
-                        Text(weatherData?.location.name ?? "- -")
+                        Text("My Location")
                             .shadow(color: .black, radius: 11)
                             .font(.largeTitle)
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                             .padding(.top, 15)
-                        if weatherData?.location.country == "United States of America" {
-                            Text("\(weatherData?.location.region ?? "- -"), USA")
+                        Text("\(weatherData?.location.name ?? "- -"), USA")
                                 .shadow(color: .black, radius: 11)
                                 .font(.headline)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.white)
-                        } else {
-                            Text(weatherData?.location.country ?? "- -")
-                                .shadow(color: .black, radius: 11)
-                                .font(.headline)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.white)
-                        }
                         ScrollView {
                             Text("\(weatherModel.convertToCelsius(temperature: Int(weatherData?.current.temp_f ?? 999)))°")
                                 .shadow(color: .black, radius: 11)

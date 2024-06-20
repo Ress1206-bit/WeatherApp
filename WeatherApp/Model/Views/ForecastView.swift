@@ -118,7 +118,7 @@ struct ForecastView: View {
                             
                             ForEach(Array(dailyData.enumerated()), id: \.element.date_epoch) { index, dayData in
                                 HStack() {
-                                    Text(String(weatherModel.formateDateDaily(String(dayData.date ?? "0000-00-00")) ?? "Date Error"))
+                                    Text(String(weatherModel.formatDateDaily(String(dayData.date ?? "0000-00-00")) ?? "Date Error"))
                                         .frame(maxWidth: 40, alignment: .leading)
                                     Spacer()
                                     Image(systemName: weatherModel.conditionCodeIntoSFSymbol(code: Int(dayData.day?.condition?.code ?? 000), isDaytime: true))

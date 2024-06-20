@@ -69,11 +69,8 @@ struct ListView: View {
                                 HStack {
                                     Button(action: {
                                         
-                                        print(cityInfo[0]! + " " + cityInfo[3]!)
-                                        
                                         if(cityNames.contains(cityInfo[0]!) || cityNames.contains(cityInfo[3]!)) {
                                             showAlert = true
-                                            print("Show Alert")
                                         }
                                         else {
                                             cityNames.append(cityInfo[3]!)
@@ -167,6 +164,7 @@ struct ListView: View {
                 .padding(.horizontal, 30)
                 .onChange(of: selectedMeasurement) { _, newValue in
                     weatherModel.setSelectedMeasurement(value: newValue)
+                    weatherModel.temporarySelectedMeasurement = newValue
                 }
                 
                 Button(action: {
@@ -221,15 +219,12 @@ struct ListView: View {
                                 Text("Error: Data type mismatch")
                             }
                         }
+                        .listStyle(.plain)
                         .scrollContentBackground(.hidden)
+                        .padding(.horizontal, 15)
+                        
                     }
                     .navigationTitle("My Places")
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            EditButton()
-                                .padding()
-                        }
-                    }
                 }
                 else {
                     LoadingView()
