@@ -82,34 +82,37 @@ class WeatherModel: NSObject, CLLocationManagerDelegate {
     }
     
     func getUserLocation() {
+
         // Checks that we have permission
         if locationManager.authorizationStatus == .authorizedWhenInUse {
             currentUserLocation = nil
             locationManager.requestLocation()
-        } else {
+        }
+        else {
             locationManager.requestWhenInUseAuthorization()
         }
+
+
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    func locationManager( _ manager: CLLocationManager, didFailWithError error: any Error) {
         print(error)
     }
 
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        // Detect if user allowed location
-        if manager.authorizationStatus == .authorizedWhenInUse && currentUserLocation == nil{
-            //currentUserLocation = nil
+    func locationManagerDidChangeAuthorization( _ manager: CLLocationManager) {
+        //Detect if user allowed location
+        if manager.authorizationStatus == .authorizedWhenInUse {
+
+            currentUserLocation = nil
             manager.requestLocation()
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentUserLocation = locations.last?.coordinate
-        
 
-        if currentUserLocation != nil {
-            coordinateString = "\(currentUserLocation?.latitude ?? 0),\(currentUserLocation?.longitude ?? 0)"
-        }
+        currentUserLocation = locations.last?.coordinate
+
+        coordinateString = "\(currentUserLocation?.latitude ?? 0),\(currentUserLocation?.longitude ?? 0)"
 
         manager.stopUpdatingLocation()
     }
