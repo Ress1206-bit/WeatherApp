@@ -51,10 +51,6 @@ The app displays a variety of weather data, including but not limited to:
 - Condition description
 - Feels like temperature
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Credits
 
 This project was made by Ethereal Development, and is powered by [WeatherAPI.com](https://www.weatherapi.com/)
