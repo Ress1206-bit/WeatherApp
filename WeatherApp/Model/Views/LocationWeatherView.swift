@@ -48,7 +48,7 @@ struct LocationWeatherView: View {
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
                             .padding(.top, 15)
-                        Text("\(weatherData?.location.name ?? "- -"), USA")
+                        Text("\(weatherData?.location.name ?? "- -"), \((weatherData?.location.country == "United States of America" ? weatherData?.location.region : weatherData?.location.country) ?? "--")")
                                 .shadow(color: .black, radius: 11)
                                 .font(.headline)
                                 .fontWeight(.medium)
