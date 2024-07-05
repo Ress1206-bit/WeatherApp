@@ -9,9 +9,13 @@ import SwiftUI
 
 struct LaunchView: View {
     
+    @Environment(\.scenePhase) var scenePhase
+    
     @Environment(WeatherModel.self) var weatherModel
     @State private var selectedTab = 0
     @State var weatherViews: [WeatherView] = []
+    
+    @State private var locationId = UUID() //Forces location to update right away because of id
     
     var body: some View {
         
@@ -88,6 +92,27 @@ struct LaunchView: View {
                     weatherModel.getUserLocation()
                     weatherModel.temporarySelectedMeasurement = weatherModel.getSelectedMeasurement()
                 }
+                .onChange(of: weatherModel.coordinateString) { _, newValue in
+                            locationId = UUID()
+                        }
+                .id(locationId)
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        weatherModel.getUserLocation()
+                        weatherModel.temporarySelectedMeasurement = weatherModel.getSelectedMeasurement()
+                        Task {
+                            var tempWeatherViews: [Int: WeatherView] = [:] // Temporary dictionary
+                            
+                            for (index, name) in weatherModel.cityNames.enumerated() {
+                                if let model = await weatherModel.apiCall(cityName: name) {
+                                    let weatherView = weatherModel.getWeatherView(currentData: model)
+                                    tempWeatherViews[index] = weatherView
+                                }
+                            }
+                            weatherViews = weatherModel.cityNames.indices.map { tempWeatherViews[$0]! }
+                        }
+                    }
+                }
                 .ignoresSafeArea()
                 
                 
@@ -143,7 +168,6 @@ struct LaunchView: View {
             .edgesIgnoringSafeArea(.all)
         }
         .frame(height: UIScreen.main.bounds.size.height)
-        
     }
 }
 
